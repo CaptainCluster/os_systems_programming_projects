@@ -22,7 +22,7 @@
 #define ERR_MEMORY     "Out of memory!\n"
 #define ERR_SAMEFILE   "The I/O files should not be the same!\n"
 #define ERR_ARGS       "usage: reverse <input> <output>\n"
-#define BUFFER_SIZE    256
+#define BUFFER_SIZE    1024
 
 int main(int argc, char** argv)
 {
