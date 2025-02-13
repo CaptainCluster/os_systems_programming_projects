@@ -1,41 +1,25 @@
 /**
  * OS and Systems Programming course - Project 1
  * The sources used for this repository are in the README.md file
+ *
+ * While this is the main file for this program, I separated the 
+ * project into other files to keep the code modular and clean.
+ *
+ * The other files
+ * ===========
+ * filemanip.c - For addressing file-related concerns
  */ 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "modules/filemanip.c"
+#include "modules/linkedlist.c"
 
 #define ERR_INPUTFILE  "Error when attempting to open the input file!\n"
 #define ERR_OUTPUTFILE "Error when attempting to open the output file!\n"
 #define ERR_MALLOC     "Unable to allocate memory.\n"
 #define ERR_MEMORY     "Out of memory!\n"
 #define BUFFER_SIZE    256
-
-struct node {
-  char* line;
-  struct node *next;
-};
-
-/**
- * One function to handle all file openings
- * Args
- * ====
- * 1) The file name
- * 2) Open method (read - "r", write "w", etc)
- * 3) Error message, in case the file opening fails
- */ 
-FILE* openFile(char* fileName, char* openMethod, char* errorMessage)
-{
-  FILE* openedFile;
-  if ((openedFile = fopen(fileName, openMethod)) == NULL)
-  {
-    fprintf(stderr, "%s", errorMessage);
-    exit(1);
-  }
-  return openedFile;
-}
 
 int main(int argc, char** argv)
 {
@@ -94,7 +78,7 @@ int main(int argc, char** argv)
       fprintf(stderr, "%s\n", ERR_MALLOC);
       exit(1);
     }
-    if(getline(&buffer, &bufferSize, inputFile) <= 0)
+    if (getline(&buffer, &bufferSize, inputFile) <= 0)
     {
       break;
     }
@@ -107,9 +91,10 @@ int main(int argc, char** argv)
   conductor = conductor->next;
   conductor->next = 0;
 
-  // Going through the linked list one node at a time
+  root = reverseLinkedList(root);
   conductor = root;
-  while ( conductor->next->next != 0 ) 
+  
+  while ( conductor != 0 ) 
   {
     fprintf(outputFile, "%s", conductor->line );
     conductor = conductor->next;
