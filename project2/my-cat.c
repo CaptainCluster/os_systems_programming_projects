@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   // Iterating through each provided file.
   for (i = 1 ; i < argc ; i++)
   {
-    FILE *fp = fopen(argv[1], "r");
+    FILE *fp = fopen(argv[i], "r");
     
     // Should opening the file fail, it will be closed
     if (fp == NULL)
@@ -43,6 +43,5 @@ int main(int argc, char** argv)
     readContent(fp);
     fclose(fp);
   }
-
   return 0;
 }
