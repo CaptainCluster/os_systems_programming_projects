@@ -118,6 +118,7 @@ int main(int argc, char** argv)
 
   traverseListOutput(conductor, outputFile);
 
+  freeLinkedList(root);
   fclose(inputFile);
   fclose(outputFile);
   return 0;

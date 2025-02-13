@@ -10,8 +10,13 @@ To compile with the *GNU C Compiler*, run the following:
 
 Sources
 ---
+
+I used multiple sources when looking for information on how to complete the project.
+
 [Linked list data structure](https://www.cprogramming.com/tutorial/c/lesson15.html)
 
 [Using getline() function](https://c-for-dummies.com/blog/?p=1112)
 
 [Reversing the linked list](https://www.geeksforgeeks.org/reverse-a-linked-list/)
+
+[Freeing linked list memory](https://stackoverflow.com/questions/6417158/c-how-to-free-nodes-in-the-linked-list)
