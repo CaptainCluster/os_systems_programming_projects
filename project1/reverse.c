@@ -38,7 +38,7 @@ int main(int argc, char** argv)
    * case 1 - No I/O files passed
    * case 2 - Input file passed
    * case 3 - I/O files passed 
-   * Default - More than 2 arguments passed
+   * Default - More than 2 arguments passed. Counts as an error.
    */ 
   switch(argc)
   {
@@ -112,17 +112,11 @@ int main(int argc, char** argv)
     fprintf(stderr, "%s", ERR_MEMORY);
     exit(1);
   }
-  conductor = conductor->next;
-  conductor->next = 0;
 
   root = reverseLinkedList(root);
   conductor = root;
-  
-  while ( conductor != 0 ) 
-  {
-    fprintf(outputFile, "%s", conductor->line );
-    conductor = conductor->next;
-  }
+
+  traverseListOutput(conductor, outputFile);
 
   fclose(inputFile);
   fclose(outputFile);
