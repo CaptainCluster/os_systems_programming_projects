@@ -4,7 +4,7 @@ The main file to run this project with is the *reverse.c* file.
 
 To compile with the *GNU C Compiler*, run the following:
 
->gcc -o <compile name> reverse.c
+>gcc -o *compile name* reverse.c
 
 Sources
 ---
