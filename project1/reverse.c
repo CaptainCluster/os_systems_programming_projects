@@ -7,7 +7,8 @@
  *
  * The other files
  * ===========
- * filemanip.c - For addressing file-related concerns
+ * filemanip.c  - For addressing file-related concerns
+ * linkedlist.c - The linked list data structure 
  */ 
 #include <stdio.h>
 #include <stdlib.h>
