@@ -18,8 +18,10 @@
 
 #define ERR_INPUTFILE  "Error when attempting to open the input file!\n"
 #define ERR_OUTPUTFILE "Error when attempting to open the output file!\n"
-#define ERR_MALLOC     "Unable to allocate memory.\n"
+#define ERR_MALLOC     "malloc failed.\n"
 #define ERR_MEMORY     "Out of memory!\n"
+#define ERR_SAMEFILE   "The I/O files should not be the same!\n"
+#define ERR_ARGS       "usage: reverse <input> <output>\n"
 #define BUFFER_SIZE    256
 
 int main(int argc, char** argv)
@@ -51,20 +53,33 @@ int main(int argc, char** argv)
       break;
 
     case 3:
+      if (!checkInputOutputValidity(argv[1], argv[2]))
+      {
+        fprintf(stderr, "%s", ERR_SAMEFILE);
+        exit(1);
+      }  
       inputFile  = openFile(argv[1], "r", ERR_INPUTFILE);
       outputFile = openFile(argv[2], "w", ERR_OUTPUTFILE);
       break;
 
     default:
-      fprintf(stdout, "You should only pass two args max: an input file and an output file.\n");
-      exit(0);
+      fprintf(stderr, "%s", ERR_ARGS);
+      exit(1);
   }
 
   // Allocating memory for both the root of the linked list and the next node
-  root = malloc(sizeof(struct node));
-  root->next = malloc(sizeof(struct node));
-  conductor = root;
+  if ((root = malloc(sizeof(struct node))) == NULL)
+  {
+    fprintf(stderr, "%s", ERR_MALLOC);
+    exit(1);
+  }
+  if ((root->next = malloc(sizeof(struct node))) == NULL)
+  {
+    fprintf(stderr, "%s", ERR_MALLOC);
+    exit(1);
+  }  
 
+  conductor = root;
   if (conductor == 0)
   {
     fprintf(stderr, "%s", ERR_MEMORY);
@@ -84,11 +99,19 @@ int main(int argc, char** argv)
       break;
     }
     conductor->line = strdup(buffer);
-    conductor->next = malloc(sizeof(struct node));
+    if ((conductor->next = malloc(sizeof(struct node))) == NULL)
+    {
+      fprintf(stderr, "%s", ERR_MEMORY);
+      exit(1);
+    }
     conductor = conductor->next;
   }
 
-  conductor->next = malloc(sizeof(struct node));
+  if ((conductor->next = malloc(sizeof(struct node))) == NULL)
+  {
+    fprintf(stderr, "%s", ERR_MEMORY);
+    exit(1);
+  }
   conductor = conductor->next;
   conductor->next = 0;
 

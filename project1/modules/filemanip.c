@@ -16,3 +16,12 @@ FILE* openFile(char* fileName, char* openMethod, char* errorMessage)
   }
   return openedFile;
 }
+
+/**
+ * Checking whether the given I/O files match. Returning an int 
+ * value dependent on the state of affairs.
+ */ 
+int checkInputOutputValidity(char* inputFileName, char* outputFileName)
+{
+  return strcmp(inputFileName, outputFileName);
+}
