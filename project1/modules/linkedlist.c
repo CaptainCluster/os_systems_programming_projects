@@ -43,3 +43,14 @@ void traverseListOutput(struct node* conductor, FILE* outputFile)
     conductor = conductor->next;
   }
 }
+
+void freeLinkedList(struct node* root)
+{
+  struct node* current;
+  while (root != NULL)
+  {
+    current = root;
+    root = root->next;
+    free(current);
+  }
+}
