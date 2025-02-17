@@ -35,7 +35,7 @@ int main(int argc, char** argv)
         // Should opening the file fail, it will be closed
         if (fp == NULL)
         {
-          printf("Cannot open file.\n");
+          printf("my-grep: cannot open file.\n");
           exit(1);
         }
         // Reading content, then closing the file
