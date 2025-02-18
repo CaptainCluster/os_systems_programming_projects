@@ -7,31 +7,6 @@ struct node {
 };
 
 /**
- * Reversing the linked list. This is used before
- * traversing the list and writing into the
- * defined output.
- *
- * Returns
- * =======
- * New root for the linked list
- */ 
-struct node* reverseLinkedList(struct node* root)
-{
-  struct node *conductor = root;
-  struct node *previous = NULL;
-  struct node *next;
-  
-  while (conductor->next->next != 0 && conductor != NULL) 
-  {
-    next = conductor->next;
-    conductor->next = previous;
-    previous = conductor;
-    conductor = next;
-  }
-  return previous;
-}
-
-/**
  * Traversing the linked list and writing each line into the 
  * defined output file.
  */
@@ -53,4 +28,18 @@ void freeLinkedList(struct node* root)
     root = root->next;
     free(current);
   }
+}
+
+void initializeRoot(struct node* root)
+{
+  if ((root = malloc(sizeof(struct node))) == NULL)
+  {
+    write(STDERR_FILENO, error_message, strlen(error_message));
+    exit(1);
+  }
+  if ((root->next = malloc(sizeof(struct node))) == NULL)
+  {
+    write(STDERR_FILENO, error_message, strlen(error_message));
+    exit(1);
+  }  
 }

@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
+#include "const.c"
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"
 #include "modules/printUtils.c"
@@ -18,13 +19,13 @@
 
 int main(int argc, char** argv) 
 {
-  char error_message[30] = "An error has occurred\n";
   char* buffer;
   char* token;
   size_t bufferSize = BUFFER_SIZE;
   FILE* inputFile;
   char fileContentBuffer[BUFFER_SIZE];
-
+  struct node *root;
+  struct node *conductor;
 
   //Checking whether the user has given an input file as a command-line arg
   switch(argc)
@@ -35,6 +36,15 @@ int main(int argc, char** argv)
     default:
       inputFile = openFile(argv[1], "r", ERR_INPUTFILE);
       break;
+  }
+
+  // Initializing the linked list and conductor (current node)
+  initializeRoot(root);
+  conductor = root;
+  if (conductor == 0)
+  {
+    write(STDERR_FILENO, error_message, strlen(error_message));
+    exit(1);
   }
 
   while (1) 
@@ -78,21 +88,6 @@ int main(int argc, char** argv)
       token = strtok(0, " ");
       printf("%s\n", token);
     }
-
-    /*
-    else if (strstr(buffer, "cd"))
-    {
-      printf("yo");
-    }
-    else if (strstr(buffer, "path"))
-    {
-      printf("hey");
-    }
-    else
-    {
-      printf("invalid input");
-    }
-    */
   }
 }
 
