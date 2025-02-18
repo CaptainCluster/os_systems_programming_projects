@@ -47,7 +47,12 @@ int main(int argc, char** argv)
 
     // Going through all inputs (separated by space)
     char *token = strtok(buffer, " ");
-    while (token != 0) {
+    while (token != 0) 
+    {
+      if (i == 0 && strstr(token, "exit")) 
+      {
+        exit(0);
+      }
       printf("%s\n", token);
       token = strtok(0, " ");
     }
