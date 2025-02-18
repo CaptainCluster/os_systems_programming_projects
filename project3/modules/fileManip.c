@@ -9,3 +9,13 @@ FILE* openFile(char* fileName, char* openMethod, char* errorMessage)
   return openedFile;
 }
 
+/**
+ * Checking for EOF. Program ends if it is EOF.
+ */ 
+void checkEOF(FILE* inputFile)
+{
+  if (feof(inputFile))
+  {
+    exit(0);
+  }
+}
