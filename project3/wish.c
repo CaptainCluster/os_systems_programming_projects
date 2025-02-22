@@ -15,7 +15,6 @@
 #include "modules/printUtils.c"
 #include "modules/processes.c"
 
-
 int main(int argc, char** argv) 
 {
   char* buffer;
@@ -37,36 +36,43 @@ int main(int argc, char** argv)
       break;
   }
 
-  // Initializing the linked list and conductor (current node)
-  initializeRoot(root);
-  conductor = root;
-  if (conductor == 0)
-  {
-    write(STDERR_FILENO, error_message, strlen(error_message));
-    exit(1);
-  }
-
   while (1) 
   {
+    // Initializing the linked list and conductor (current node)
+    initializeRoot(&root);
+    conductor = root;
+    if (conductor == 0)
+    {
+      write(STDERR_FILENO, error_message, strlen(error_message));
+      exit(1);
+    }
+
     buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
     int i = 0;
     printPrompt(argc);
-    
+
     // Fetching the next line and ensuring it is not EOF.
     getline(&buffer, &bufferSize, inputFile);
     checkEOF(inputFile);
 
     // Putting the separate commands into linked list
     putCommandsInLinkedList(conductor, buffer);
-    
+
     // Traversing through the linked list in order to execute 
     // the commands in differing child processes.
     conductor = root;
-    
-    handleCommand("exit a w w");
-    
 
-    // Going through all inputs (separated by spacei)
+    //handleCommand(root->line);
+    while ( conductor != 0 ) 
+    {
+      // Separating the potential multiple arguments
+      handleCommand(conductor->line);
+      conductor = conductor->next;
+    }
+
   }
+  // Freeing up the linked list and closing the input file
+  freeLinkedList(&root);
+  fclose(inputFile);
 }
 

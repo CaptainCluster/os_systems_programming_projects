@@ -20,25 +20,25 @@ void traverseList(struct node* conductor)
   }
 }
 
-void freeLinkedList(struct node* root)
+void freeLinkedList(struct node** root)
 {
   struct node* current;
-  while (root != NULL)
+  while (*root != NULL)
   {
-    current = root;
-    root = root->next;
+    current = *root;
+    *root = (*root)->next;
     free(current);
   }
 }
 
-void initializeRoot(struct node* root)
+void initializeRoot(struct node** root)
 {
-  if ((root = malloc(sizeof(struct node))) == NULL)
+  if ((*root = malloc(sizeof(struct node))) == NULL)
   {
     write(STDERR_FILENO, error_message, strlen(error_message));
     exit(1);
   }
-  if ((root->next = malloc(sizeof(struct node))) == NULL)
+  if (((*root)->next = malloc(sizeof(struct node))) == NULL)
   {
     write(STDERR_FILENO, error_message, strlen(error_message));
     exit(1);
@@ -60,5 +60,4 @@ void putCommandsInLinkedList(struct node* conductor, char* buffer)
     printf("%s\n", token);
     token = strtok(0, "&");
   }
-
 }
