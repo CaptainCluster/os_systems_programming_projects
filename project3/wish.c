@@ -2,6 +2,7 @@
  * strtok - https://www.geeksforgeeks.org/strtok-strtok_r-functions-c-examples/
  * checking for EOF - https://stackoverflow.com/questions/64958306/recognizing-eof-vs-newline-in-getline-in-c
  * Creations of child processes - https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf
+ * Using exec commands - https://www.geeksforgeeks.org/exec-family-of-functions-in-c/
  */  
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,7 +70,6 @@ int main(int argc, char** argv)
       handleCommand(conductor->line);
       conductor = conductor->next;
     }
-
   }
   // Freeing up the linked list and closing the input file
   freeLinkedList(&root);
