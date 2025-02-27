@@ -5,6 +5,7 @@
  * Using exec commands - https://www.geeksforgeeks.org/exec-family-of-functions-in-c/
  * Appending data to array - https://stackoverflow.com/questions/26208788/can-someone-explain-how-to-append-an-element-to-an-array-in-c-programming
  * Removing newline from an arg - https://stackoverflow.com/questions/9628637/how-can-i-get-rid-of-n-from-string-in-c
+ * More info about access - https://www.geeksforgeeks.org/access-command-in-linux-with-examples/
  */  
 #include <stdio.h>
 #include <stdlib.h>
