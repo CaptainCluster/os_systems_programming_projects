@@ -3,6 +3,8 @@
  * checking for EOF - https://stackoverflow.com/questions/64958306/recognizing-eof-vs-newline-in-getline-in-c
  * Creations of child processes - https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf
  * Using exec commands - https://www.geeksforgeeks.org/exec-family-of-functions-in-c/
+ * Appending data to array - https://stackoverflow.com/questions/26208788/can-someone-explain-how-to-append-an-element-to-an-array-in-c-programming
+ * Removing newline from an arg - https://stackoverflow.com/questions/9628637/how-can-i-get-rid-of-n-from-string-in-c
  */  
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,8 +65,7 @@ int main(int argc, char** argv)
     // the commands in differing child processes.
     conductor = root;
 
-    //handleCommand(root->line);
-    while ( conductor != 0 ) 
+    while ( conductor->next->next != 0 ) 
     {
       // Separating the potential multiple arguments
       handleCommand(conductor->line);
