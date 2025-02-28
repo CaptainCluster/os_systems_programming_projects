@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
-
 #include "const.c"
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"

@@ -33,6 +33,19 @@ void handleNoArg(char** token, char* originalCommand)
   }
 }
 
+void appendArguments(char **token, char* (*arguments)[2048])
+{
+  int i = 1;
+  char* delim = " ";
+  while (*token != NULL)
+  {
+    (*token)[strlen(*token)-1] = 0;
+    (*arguments)[i] = (*token);
+    i++;
+    (*token) = strtok(0 , ARGS_DELIM);
+  }
+}
+
 /**
  * Finding the right directory for the command, and whether the process has 
  * execute permission over it.
@@ -46,7 +59,7 @@ char* checkBinDir(char* command)
 {
   char binPrimary[5 + sizeof(command)] = "/bin/";
   char binSecondary[9 + sizeof(command)] = "/usr/bin/";
-  
+
   strcat(binPrimary, command);
   if (access(binPrimary, X_OK) != -1)
   {
@@ -89,35 +102,19 @@ void handleCommand(char* commandInput)
 
   char *arguments[2048] = {};
   arguments[0] = token;
-  int i = 1;
-
-  // Storing the main command into its own variable
-  char *commandEnd;
-  if ((commandEnd = (char*)malloc(sizeof(token))) == NULL)
-  {
-    write(STDERR_FILENO, error_message, strlen(error_message));
-    exit(1);
-  }
 
   // Getting the command together
   char command[5 + sizeof(token)] = "/bin/";
   strcat(command, token);
+  token = strtok(0 , ARGS_DELIM);
 
-  token = strtok(0 , delim);
   // Getting the arguments together
-  while (token != NULL)
-  {
-    token[strlen(token)-1] = 0;
-    arguments[i] = token;
-    i++;
-    token = strtok(0 , delim);
-  }
-  arguments[i++] = NULL;
+  appendArguments(&token, &arguments);
 
   // Creating a thread for the command 
   int pid; 
   int status;
-  switch(pid = fork())
+  switch(fork())
   {
     case -1:
       write(STDERR_FILENO, error_message, strlen(error_message));
@@ -125,7 +122,7 @@ void handleCommand(char* commandInput)
     case 0:
       childProcess(command, arguments);
       break;
-    case 1:
+    default:
       if (wait(&status) == -1)
       {
         write(STDERR_FILENO, error_message, strlen(error_message));
