@@ -6,13 +6,13 @@ void childProcess(char* command, char* const* arguments)
 {
   if (strstr(arguments[0], "exit")) 
   {
-    // If additional args were passed to exit, an error is shown
-    if (arguments[1] != NULL)
+    if (arguments[1] == NULL)
     {
       write(STDERR_FILENO, error_message, strlen(error_message));
       exit(1);
     }
-    exit(0);
+    // If additional args were passed to exit, an error is shown
+    processExit(arguments); 
   }
   
   execv(command, arguments);
@@ -91,21 +91,14 @@ void handleCommand(char* commandInput)
 {
   // Preserving the command in its original form for comparisons
   char* originalCommand = strdup(commandInput);
-
-  char *delim = " ";
-  char *token = strtok(commandInput, delim);
+  char *token = strtok(commandInput, ARGS_DELIM);
 
   // Removing newline, provided no arguments were given
   handleNoArg(&token, originalCommand);
-
-  char *coreCommand = checkBinDir(token);
-
   char *arguments[2048] = {};
   arguments[0] = token;
 
-  // Getting the command together
-  char command[5 + sizeof(token)] = "/bin/";
-  strcat(command, token);
+  char *command = checkBinDir(token);
   token = strtok(0 , ARGS_DELIM);
 
   // Getting the arguments together

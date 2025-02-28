@@ -16,6 +16,7 @@
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"
 #include "modules/printUtils.c"
+#include "modules/builtCommands.c"
 #include "modules/processes.c"
 
 int main(int argc, char** argv) 
