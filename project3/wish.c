@@ -52,7 +52,6 @@ int main(int argc, char** argv)
     }
 
     buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
-    int i = 0;
     printPrompt(argc);
 
     // Fetching the next line and ensuring it is not EOF.

@@ -61,13 +61,28 @@ char* checkBinDir(char* command)
   exit(1);
 }
 
+/**
+ * Checking whether a command is built-in or not
+ * 
+ * Returns
+ * =======
+ * 1 - If is built-in
+ * 0 - If not
+ */
+int inspectBuiltInCommand(char* commandInput)
+{
+  return (strstr(commandInput, "exit") || strstr(commandInput, "path") || strstr(commandInput, "cd"));
+}
+
 void handleCommand(char* commandInput)
 {
+  // Preserving the command in its original form for comparisons
   char* originalCommand = strdup(commandInput);
 
   char *delim = " ";
   char *token = strtok(commandInput, delim);
 
+  // Removing newline, provided no arguments were given
   handleNoArg(&token, originalCommand);
 
   char *coreCommand = checkBinDir(token);
@@ -85,21 +100,8 @@ void handleCommand(char* commandInput)
   }
 
   // Getting the command together
-  strcpy(commandEnd, token);
-  char *command;
-  command = (char*)malloc(sizeof("/bin/") + sizeof(commandEnd));
-  strcat(command, "/bin/");
-  strcat(command, commandEnd);
-
-
-  // Inspecting for exit command. Exiting if it is provided. In case 
-  // unnecessary arguments were given, the exit happens with an error.
-
-  // Not a valid command? Returning
-  if (!(strstr(token, "cd") || strstr(token, "path") || strstr(token, "ls") || strstr(token, "exit")))
-  {
-    return;
-  }
+  char command[5 + sizeof(token)] = "/bin/";
+  strcat(command, token);
 
   token = strtok(0 , delim);
   // Getting the arguments together
