@@ -2,20 +2,16 @@
 #include <string.h>
 #include <unistd.h>
 
-void childProcess(char* command, char* const* arguments)
+void buildInCommands(char* const* arguments)
 {
   if (strstr(arguments[0], "exit")) 
   {
-    if (arguments[1] == NULL)
-    {
-      write(STDERR_FILENO, error_message, strlen(error_message));
-      exit(1);
-    }
-    // If additional args were passed to exit, an error is shown
-    processExit(arguments); 
+    commandExit(arguments);
   }
-  
-  execv(command, arguments);
+  else if(strstr(arguments[0], "cd"))
+  {
+    commandCd(arguments);
+  }
 }
 
 /**
@@ -33,13 +29,16 @@ void handleNoArg(char** token, char* originalCommand)
   }
 }
 
-void appendArguments(char **token, char* (*arguments)[2048])
+void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
 {
   int i = 1;
   char* delim = " ";
   while (*token != NULL)
   {
-    (*token)[strlen(*token)-1] = 0;
+    if (!isBuiltIn)
+    {
+      (*token)[strlen(*token)-1] = 0;
+    }
     (*arguments)[i] = (*token);
     i++;
     (*token) = strtok(0 , ARGS_DELIM);
@@ -87,6 +86,9 @@ int inspectBuiltInCommand(char* commandInput)
   return (strstr(commandInput, "exit") || strstr(commandInput, "path") || strstr(commandInput, "cd"));
 }
 
+/**
+ * The core function for handling each of the input commands
+ */
 void handleCommand(char* commandInput)
 {
   // Preserving the command in its original form for comparisons
@@ -94,18 +96,27 @@ void handleCommand(char* commandInput)
   char *token = strtok(commandInput, ARGS_DELIM);
 
   // Removing newline, provided no arguments were given
-  handleNoArg(&token, originalCommand);
   char *arguments[2048] = {};
   arguments[0] = token;
+
+  if (inspectBuiltInCommand(token))
+  {
+    token = strtok(0 , ARGS_DELIM);
+    appendArguments(&token, &arguments, 1);
+    int status;
+    buildInCommands(arguments);
+    return;
+  }
+  
+  handleNoArg(&token, originalCommand);
 
   char *command = checkBinDir(token);
   token = strtok(0 , ARGS_DELIM);
 
   // Getting the arguments together
-  appendArguments(&token, &arguments);
+  appendArguments(&token, &arguments, 0);
 
   // Creating a thread for the command 
-  int pid; 
   int status;
   switch(fork())
   {
@@ -113,7 +124,7 @@ void handleCommand(char* commandInput)
       write(STDERR_FILENO, error_message, strlen(error_message));
       break;
     case 0:
-      childProcess(command, arguments);
+      execv(command, arguments);
       break;
     default:
       if (wait(&status) == -1)

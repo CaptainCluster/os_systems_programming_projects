@@ -6,6 +6,7 @@
  * Appending data to array - https://stackoverflow.com/questions/26208788/can-someone-explain-how-to-append-an-element-to-an-array-in-c-programming
  * Removing newline from an arg - https://stackoverflow.com/questions/9628637/how-can-i-get-rid-of-n-from-string-in-c
  * More info about access - https://www.geeksforgeeks.org/access-command-in-linux-with-examples/
+ * Chdir - https://www.geeksforgeeks.org/chdir-in-c-language-with-examples/
  */  
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,10 +14,10 @@
 #include <string.h>
 #include <sys/wait.h>
 #include "const.c"
+#include "modules/builtCommands.c"
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"
 #include "modules/printUtils.c"
-#include "modules/builtCommands.c"
 #include "modules/processes.c"
 
 int main(int argc, char** argv) 
@@ -67,7 +68,7 @@ int main(int argc, char** argv)
 
     while ( conductor->next->next != 0 ) 
     {
-      // Separating the potential multiple arguments
+      // Handling each command individually
       handleCommand(conductor->line);
       conductor = conductor->next;
     }
