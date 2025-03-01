@@ -12,10 +12,9 @@ struct node {
  */
 void traverseList(struct node* conductor)
 {
-  while ( conductor != 0 ) 
+  while ( conductor != NULL ) 
   {
     // Separating the potential multiple arguments
-    fprintf(stdin , "%s", conductor->line );
     conductor = conductor->next;
   }
 }
@@ -45,19 +44,21 @@ void initializeRoot(struct node** root)
   }  
 }
 
-void putCommandsInLinkedList(struct node* conductor, char* buffer)
+void putTokensInLinkedList(struct node* conductor, char* buffer)
 {
-  char *token = strtok(buffer, "&");
-  while (token != 0)
+  char *token = strtok(buffer, CMD_DELIM);
+  while (token != NULL)
   {
+    removeNewLine(&token);
+
     conductor->line = strdup(token);
     conductor = conductor->next;
     if ((conductor->next = malloc(sizeof(struct node))) == NULL)
     {
       write(STDERR_FILENO, error_message, strlen(error_message));
       exit(1);
-    }  
-    printf("%s\n", token);
-    token = strtok(0, "&");
+    }
+    token = strtok(0, CMD_DELIM);
   }
 }
+
