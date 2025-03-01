@@ -19,13 +19,13 @@ void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
   int i = 1;
   while (*token != NULL)
   {
-    if (!isBuiltIn)
+    if ((*token)[strlen(*token)-1] == '\n')
     {
       (*token)[strlen(*token)-1] = 0;
     }
     (*arguments)[i] = (*token);
-    i++;
     (*token) = strtok(0 , ARGS_DELIM);
+    i++;
   }
 }
 
@@ -48,10 +48,7 @@ char* checkBinDir(char* command, struct node* conductor)
     {
       return strdup(path);
     }
-    if (conductor->next != NULL)
-    {
-      conductor = conductor->next;
-    }
+    conductor = conductor->next;
   }
   write(STDERR_FILENO, error_message, strlen(error_message));
   exit(1);
