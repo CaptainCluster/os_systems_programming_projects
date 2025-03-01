@@ -7,6 +7,7 @@
  * Removing newline from an arg - https://stackoverflow.com/questions/9628637/how-can-i-get-rid-of-n-from-string-in-c
  * More info about access - https://www.geeksforgeeks.org/access-command-in-linux-with-examples/
  * Chdir - https://www.geeksforgeeks.org/chdir-in-c-language-with-examples/
+ * Redirect - https://stackoverflow.com/questions/14543443/in-c-how-do-you-redirect-stdin-stdout-stderr-to-files-when-making-an-execvp-or
  */  
 #include <stdio.h>
 #include <stdlib.h>
