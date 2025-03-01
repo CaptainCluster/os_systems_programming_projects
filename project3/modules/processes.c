@@ -14,21 +14,6 @@ void buildInCommands(char* const* arguments, struct node* pathRoot)
   }
 }
 
-/**
- * Ensures commands with no arguments can be executed properly
- * 
- * Current procedures
- * ==================
- * 1) Removal of newline
- */
-void handleNoArg(char** token, char* originalCommand)
-{
-  if (strstr(*token, originalCommand))
-  {
-    (*token)[strlen(*token)-1] = 0;
-  }
-}
-
 void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
 {
   int i = 1;
@@ -55,7 +40,6 @@ void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
  */
 char* checkBinDir(char* command, struct node* conductor) 
 {
-  int i = 0;
   while (conductor != NULL)
   {
     char *path = strdup(conductor->line);
@@ -64,8 +48,10 @@ char* checkBinDir(char* command, struct node* conductor)
     {
       return strdup(path);
     }
-    conductor = conductor->next;
-    i++;
+    if (conductor->next != NULL)
+    {
+      conductor = conductor->next;
+    }
   }
   write(STDERR_FILENO, error_message, strlen(error_message));
   exit(1);
@@ -106,12 +92,10 @@ void handleCommand(char* commandInput, struct node* pathRoot)
     buildInCommands(arguments, pathConductor);
     return;
   }
-  
-  handleNoArg(&token, originalCommand);
 
   char *command = checkBinDir(token, pathConductor);
   token = strtok(0 , ARGS_DELIM);
-
+  
   // Getting the arguments together
   appendArguments(&token, &arguments, 0);
 
@@ -121,6 +105,7 @@ void handleCommand(char* commandInput, struct node* pathRoot)
   {
     case -1:
       write(STDERR_FILENO, error_message, strlen(error_message));
+      exit(1);
       break;
     case 0:
       execv(command, arguments);

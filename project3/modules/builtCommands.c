@@ -29,6 +29,7 @@ void commandCd(char* const* arguments)
 void commandPath(char* const* arguments, struct node* pathConductor)
 {
   int i;
+
   pathConductor->line = strdup(arguments[1]);
   pathConductor->next = NULL;
 
@@ -50,6 +51,7 @@ void commandPath(char* const* arguments, struct node* pathConductor)
       pathConductor->next = NULL;
       continue;
     }
+
     // The normal procedure for an argument
     pathConductor->line = strdup(arguments[i]);
     pathConductor->next = NULL;

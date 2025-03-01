@@ -47,15 +47,21 @@ void initializeRoot(struct node** root)
 void putTokensInLinkedList(struct node* conductor, char* buffer)
 {
   char *token = strtok(buffer, CMD_DELIM);
-  while (token != 0)
+  while (token != NULL)
   {
+    if (token[strlen(token)-1] == '\n')
+    {
+      token[strlen(token)-1] = 0;
+    }
+
     conductor->line = strdup(token);
     conductor = conductor->next;
     if ((conductor->next = malloc(sizeof(struct node))) == NULL)
     {
       write(STDERR_FILENO, error_message, strlen(error_message));
       exit(1);
-    }  
+    }
     token = strtok(0, CMD_DELIM);
   }
 }
+

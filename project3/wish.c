@@ -66,6 +66,7 @@ int main(int argc, char** argv)
 
     // Putting the separate commands into linked list
     putTokensInLinkedList(conductor, buffer);
+    traverseList(root);
 
     // Traversing through the linked list in order to execute 
     // the commands in differing child processes.
