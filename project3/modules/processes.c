@@ -1,3 +1,4 @@
+#include <stdio.h>
 void buildInCommands(char* const* arguments, struct node* pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
@@ -102,6 +103,7 @@ void handleCommand(char* commandInput, struct node* pathRoot)
       exit(1);
       break;
     case 0:
+      openRedirect(&arguments);
       execv(command, arguments);
       break;
     default:
