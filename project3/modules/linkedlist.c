@@ -49,10 +49,7 @@ void putTokensInLinkedList(struct node* conductor, char* buffer)
   char *token = strtok(buffer, CMD_DELIM);
   while (token != NULL)
   {
-    if (token[strlen(token)-1] == '\n')
-    {
-      token[strlen(token)-1] = 0;
-    }
+    removeNewLine(&token);
 
     conductor->line = strdup(token);
     conductor = conductor->next;

@@ -14,10 +14,10 @@
 #include <string.h>
 #include <sys/wait.h>
 #include "const.c"
+#include "modules/customUtils.c"
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"
 #include "modules/builtCommands.c"
-#include "modules/printUtils.c"
 #include "modules/processes.c"
 
 int main(int argc, char** argv) 

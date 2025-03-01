@@ -9,3 +9,11 @@ void printPrompt(int argc)
     printf("wish> ");
   }
 }
+
+void removeNewLine(char** string)
+{
+  if ((*string)[strlen(*string)-1] == '\n')
+  {
+    (*string)[strlen(*string)-1] = 0; 
+  }
+}

@@ -46,10 +46,7 @@ void commandPath(char* const* arguments, struct node* pathConductor)
     if (arguments[i + 1] == NULL) 
     {
       char* string = strdup(arguments[i]);
-      if (string[strlen(string)-1] == '\n')
-      {
-        string[strlen(string)-1] = 0;
-      }
+      removeNewLine(&string);
       pathConductor->line = strdup(string);
       pathConductor->next = NULL;
       continue;

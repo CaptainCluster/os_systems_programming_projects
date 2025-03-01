@@ -19,10 +19,7 @@ void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
   int i = 1;
   while (*token != NULL)
   {
-    if ((*token)[strlen(*token)-1] == '\n')
-    {
-      (*token)[strlen(*token)-1] = 0;
-    }
+    removeNewLine(token);
     (*arguments)[i] = (*token);
     (*token) = strtok(0 , ARGS_DELIM);
     i++;
