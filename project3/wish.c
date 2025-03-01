@@ -14,9 +14,9 @@
 #include <string.h>
 #include <sys/wait.h>
 #include "const.c"
-#include "modules/builtCommands.c"
 #include "modules/fileManip.c"
 #include "modules/linkedlist.c"
+#include "modules/builtCommands.c"
 #include "modules/printUtils.c"
 #include "modules/processes.c"
 
@@ -29,6 +29,11 @@ int main(int argc, char** argv)
   char fileContentBuffer[BUFFER_SIZE];
   struct node *root;
   struct node *conductor;
+
+  // A linked list for storing the defined paths
+  struct node *pathRoot;
+  initializeRoot(&pathRoot);
+  pathRoot->line = "/bin/";
 
   //Checking whether the user has given an input file as a command-line arg
   switch(argc)
@@ -60,21 +65,24 @@ int main(int argc, char** argv)
     checkEOF(inputFile);
 
     // Putting the separate commands into linked list
-    putCommandsInLinkedList(conductor, buffer);
+    putTokensInLinkedList(conductor, buffer);
 
     // Traversing through the linked list in order to execute 
     // the commands in differing child processes.
     conductor = root;
+    struct node* pathConductor = pathRoot;
 
     while ( conductor->next->next != 0 ) 
     {
       // Handling each command individually
-      handleCommand(conductor->line);
+      handleCommand(conductor->line, pathConductor);
       conductor = conductor->next;
     }
+    freeLinkedList(&root);
   }
   // Freeing up the linked list and closing the input file
   freeLinkedList(&root);
+  freeLinkedList(&pathRoot);
   fclose(inputFile);
 }
 

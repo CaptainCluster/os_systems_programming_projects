@@ -1,8 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-void buildInCommands(char* const* arguments)
+void buildInCommands(char* const* arguments, struct node* pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
   {
@@ -11,6 +7,10 @@ void buildInCommands(char* const* arguments)
   else if(strstr(arguments[0], "cd"))
   {
     commandCd(arguments);
+  }
+  else if (strstr(arguments[0], "path"))
+  {
+    commandPath(arguments, pathRoot);
   }
 }
 
@@ -32,7 +32,6 @@ void handleNoArg(char** token, char* originalCommand)
 void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
 {
   int i = 1;
-  char* delim = " ";
   while (*token != NULL)
   {
     if (!isBuiltIn)
@@ -54,20 +53,19 @@ void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
  * 1) Path of the dir with the execute permission
  * 2) If 1 does not occur, an error occurs
  */
-char* checkBinDir(char* command) 
+char* checkBinDir(char* command, struct node* conductor) 
 {
-  char binPrimary[5 + sizeof(command)] = "/bin/";
-  char binSecondary[9 + sizeof(command)] = "/usr/bin/";
-
-  strcat(binPrimary, command);
-  if (access(binPrimary, X_OK) != -1)
+  int i = 0;
+  while (conductor != NULL)
   {
-    return strdup(binPrimary);
-  }
-  strcat(binSecondary, command);
-  if (access(binSecondary, X_OK) != -1)
-  {
-    return strdup(binSecondary);
+    char *path = strdup(conductor->line);
+    strcat(path, command);
+    if (access(path, X_OK) != -1)
+    {
+      return strdup(path);
+    }
+    conductor = conductor->next;
+    i++;
   }
   write(STDERR_FILENO, error_message, strlen(error_message));
   exit(1);
@@ -89,8 +87,10 @@ int inspectBuiltInCommand(char* commandInput)
 /**
  * The core function for handling each of the input commands
  */
-void handleCommand(char* commandInput)
+void handleCommand(char* commandInput, struct node* pathRoot)
 {
+  struct node* pathConductor = pathRoot;
+  
   // Preserving the command in its original form for comparisons
   char* originalCommand = strdup(commandInput);
   char *token = strtok(commandInput, ARGS_DELIM);
@@ -103,14 +103,13 @@ void handleCommand(char* commandInput)
   {
     token = strtok(0 , ARGS_DELIM);
     appendArguments(&token, &arguments, 1);
-    int status;
-    buildInCommands(arguments);
+    buildInCommands(arguments, pathConductor);
     return;
   }
   
   handleNoArg(&token, originalCommand);
 
-  char *command = checkBinDir(token);
+  char *command = checkBinDir(token, pathConductor);
   token = strtok(0 , ARGS_DELIM);
 
   // Getting the arguments together
