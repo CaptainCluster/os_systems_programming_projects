@@ -22,17 +22,16 @@
 #define ERR_MEMORY     "Out of memory!\n"
 #define ERR_SAMEFILE   "The I/O files should not be the same!\n"
 #define ERR_ARGS       "usage: reverse <input> <output>\n"
-#define BUFFER_SIZE    1024
 
 int main(int argc, char** argv)
 {
-  FILE* inputFile;
-  FILE* outputFile;
   struct node *root;
   struct node *conductor;
   char* buffer;
-  size_t bufferSize = BUFFER_SIZE;
+  size_t bufferSize = 0;
 
+  FILE* inputFile  = stdin;
+  FILE* outputFile = stdout;
   /** 
    * Defining the input and output files for the program to operate with
    * case 1 - No I/O files passed
@@ -43,13 +42,13 @@ int main(int argc, char** argv)
   switch(argc)
   {
     case 1:
-      inputFile  = stdin;
-      outputFile = stdout;
       break;
     
     case 2:
-      inputFile  = openFile(argv[1], "r", ERR_INPUTFILE);
-      outputFile = stdout;
+      if ((inputFile = openFile(argv[1], "r", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
       break;
 
     case 3:
@@ -57,9 +56,16 @@ int main(int argc, char** argv)
       {
         fprintf(stderr, "%s", ERR_SAMEFILE);
         exit(1);
-      }  
-      inputFile  = openFile(argv[1], "r", ERR_INPUTFILE);
-      outputFile = openFile(argv[2], "w", ERR_OUTPUTFILE);
+      }
+
+      if ((inputFile = openFile(argv[1], "r", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
+      if ((outputFile = openFile(argv[2], "w", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
       break;
 
     default:
@@ -67,17 +73,12 @@ int main(int argc, char** argv)
       exit(1);
   }
 
-  // Allocating memory for both the root of the linked list and the next node
+  // Allocating memory for both the root of the linked list
   if ((root = malloc(sizeof(struct node))) == NULL)
   {
     fprintf(stderr, "%s", ERR_MALLOC);
     exit(1);
   }
-  if ((root->next = malloc(sizeof(struct node))) == NULL)
-  {
-    fprintf(stderr, "%s", ERR_MALLOC);
-    exit(1);
-  }  
 
   conductor = root;
   if (conductor == 0)
@@ -89,16 +90,17 @@ int main(int argc, char** argv)
   // Putting the input lines into a linked list
   while (1)
   {
-    if ((buffer = (char*) malloc(BUFFER_SIZE * sizeof(char))) == NULL)
-    {
-      fprintf(stderr, "%s\n", ERR_MALLOC);
-      exit(1);
-    }
+    buffer = NULL;
+
     if (getline(&buffer, &bufferSize, inputFile) <= 0)
     {
       break;
     }
     conductor->line = strdup(buffer);
+     
+    // Freeing the buffer to avoid memory leak
+    free(buffer);
+
     if ((conductor->next = malloc(sizeof(struct node))) == NULL)
     {
       fprintf(stderr, "%s", ERR_MEMORY);
@@ -106,19 +108,15 @@ int main(int argc, char** argv)
     }
     conductor = conductor->next;
   }
-
-  if ((conductor->next = malloc(sizeof(struct node))) == NULL)
-  {
-    fprintf(stderr, "%s", ERR_MEMORY);
-    exit(1);
-  }
-
+  
+  conductor->next = NULL;
+  free(buffer);
   root = reverseLinkedList(root);
-  conductor = root;
 
-  traverseListOutput(conductor, outputFile);
+  traverseListOutput(root, outputFile);
 
-  freeLinkedList(root);
+  freeLinkedList(&root);
+  freeLinkedList(&conductor);
   fclose(inputFile);
   fclose(outputFile);
   return 0;

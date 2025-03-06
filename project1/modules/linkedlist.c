@@ -21,7 +21,7 @@ struct node* reverseLinkedList(struct node* root)
   struct node *previous = NULL;
   struct node *next;
   
-  while (conductor->next->next != 0 && conductor != NULL) 
+  while (conductor->next != NULL) 
   {
     next = conductor->next;
     conductor->next = previous;
@@ -44,13 +44,14 @@ void traverseListOutput(struct node* conductor, FILE* outputFile)
   }
 }
 
-void freeLinkedList(struct node* root)
+void freeLinkedList(struct node** root)
 {
   struct node* current;
-  while (root != NULL)
+  while (*root != NULL)
   {
-    current = root;
-    root = root->next;
+    current = *root;
+    *root = (*root)->next;
+    free(current->line);
     free(current);
   }
 }
