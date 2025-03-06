@@ -116,7 +116,7 @@ int main(int argc, char** argv)
   traverseListOutput(root, outputFile);
 
   freeLinkedList(&root);
-  freeLinkedList(&conductor);
+  free(conductor);
   fclose(inputFile);
   fclose(outputFile);
   return 0;
