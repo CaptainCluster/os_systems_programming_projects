@@ -25,13 +25,13 @@
 
 int main(int argc, char** argv)
 {
-  FILE* inputFile;
-  FILE* outputFile;
   struct node *root;
   struct node *conductor;
   char* buffer;
   size_t bufferSize = 0;
 
+  FILE* inputFile  = stdin;
+  FILE* outputFile = stdout;
   /** 
    * Defining the input and output files for the program to operate with
    * case 1 - No I/O files passed
@@ -42,13 +42,13 @@ int main(int argc, char** argv)
   switch(argc)
   {
     case 1:
-      inputFile  = stdin;
-      outputFile = stdout;
       break;
     
     case 2:
-      inputFile  = openFile(argv[1], "r", ERR_INPUTFILE);
-      outputFile = stdout;
+      if ((inputFile = openFile(argv[1], "r", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
       break;
 
     case 3:
@@ -56,9 +56,16 @@ int main(int argc, char** argv)
       {
         fprintf(stderr, "%s", ERR_SAMEFILE);
         exit(1);
-      }  
-      inputFile  = openFile(argv[1], "r", ERR_INPUTFILE);
-      outputFile = openFile(argv[2], "w", ERR_OUTPUTFILE);
+      }
+
+      if ((inputFile = openFile(argv[1], "r", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
+      if ((outputFile = openFile(argv[2], "w", ERR_INPUTFILE)) == NULL)
+      {
+        fprintf(stderr, "error: cannot open file '%s'", argv[1]);
+      };
       break;
 
     default:
