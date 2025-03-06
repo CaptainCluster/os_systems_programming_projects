@@ -22,7 +22,6 @@
 #define ERR_MEMORY     "Out of memory!\n"
 #define ERR_SAMEFILE   "The I/O files should not be the same!\n"
 #define ERR_ARGS       "usage: reverse <input> <output>\n"
-#define BUFFER_SIZE    1024
 
 int main(int argc, char** argv)
 {
@@ -31,7 +30,7 @@ int main(int argc, char** argv)
   struct node *root;
   struct node *conductor;
   char* buffer;
-  size_t bufferSize = BUFFER_SIZE;
+  size_t bufferSize = 0;
 
   /** 
    * Defining the input and output files for the program to operate with
@@ -67,17 +66,12 @@ int main(int argc, char** argv)
       exit(1);
   }
 
-  // Allocating memory for both the root of the linked list and the next node
+  // Allocating memory for both the root of the linked list
   if ((root = malloc(sizeof(struct node))) == NULL)
   {
     fprintf(stderr, "%s", ERR_MALLOC);
     exit(1);
   }
-  if ((root->next = malloc(sizeof(struct node))) == NULL)
-  {
-    fprintf(stderr, "%s", ERR_MALLOC);
-    exit(1);
-  }  
 
   conductor = root;
   if (conductor == 0)
@@ -89,16 +83,17 @@ int main(int argc, char** argv)
   // Putting the input lines into a linked list
   while (1)
   {
-    if ((buffer = (char*) malloc(BUFFER_SIZE * sizeof(char))) == NULL)
-    {
-      fprintf(stderr, "%s\n", ERR_MALLOC);
-      exit(1);
-    }
+    buffer = NULL;
+
     if (getline(&buffer, &bufferSize, inputFile) <= 0)
     {
       break;
     }
     conductor->line = strdup(buffer);
+     
+    // Freeing the buffer to avoid memory leak
+    free(buffer);
+
     if ((conductor->next = malloc(sizeof(struct node))) == NULL)
     {
       fprintf(stderr, "%s", ERR_MEMORY);
@@ -106,19 +101,15 @@ int main(int argc, char** argv)
     }
     conductor = conductor->next;
   }
-
-  if ((conductor->next = malloc(sizeof(struct node))) == NULL)
-  {
-    fprintf(stderr, "%s", ERR_MEMORY);
-    exit(1);
-  }
-
+  
+  conductor->next = NULL;
+  free(buffer);
   root = reverseLinkedList(root);
-  conductor = root;
 
-  traverseListOutput(conductor, outputFile);
+  traverseListOutput(root, outputFile);
 
-  freeLinkedList(root);
+  freeLinkedList(&root);
+  freeLinkedList(&conductor);
   fclose(inputFile);
   fclose(outputFile);
   return 0;
