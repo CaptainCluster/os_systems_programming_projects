@@ -67,7 +67,6 @@ int main(int argc, char** argv)
 
     // Putting the separate commands into linked list
     putTokensInLinkedList(conductor, buffer);
-    traverseList(root);
 
     // Traversing through the linked list in order to execute 
     // the commands in differing child processes.
@@ -80,7 +79,6 @@ int main(int argc, char** argv)
       handleCommand(conductor->line, pathConductor);
       conductor = conductor->next;
     }
-    freeLinkedList(&root);
   }
   // Freeing up the linked list and closing the input file
   freeLinkedList(&root);

@@ -6,19 +6,6 @@ struct node {
   struct node *next;
 };
 
-/**
- * Traversing the linked list and writing each line into the 
- * defined output file.
- */
-void traverseList(struct node* conductor)
-{
-  while ( conductor != NULL ) 
-  {
-    // Separating the potential multiple arguments
-    conductor = conductor->next;
-  }
-}
-
 void freeLinkedList(struct node** root)
 {
   struct node* current;
@@ -26,6 +13,7 @@ void freeLinkedList(struct node** root)
   {
     current = *root;
     *root = (*root)->next;
+    free(current->line);
     free(current);
   }
 }
