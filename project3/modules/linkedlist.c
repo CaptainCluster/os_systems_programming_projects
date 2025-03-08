@@ -25,6 +25,8 @@ void initializeRoot(struct node** root)
     write(STDERR_FILENO, error_message, strlen(error_message));
     exit(1);
   }
+  (*root)->line = NULL; 
+  (*root)->next = NULL;
 }
 
 void putTokensInLinkedList(struct node* conductor, char* buffer)
@@ -34,13 +36,17 @@ void putTokensInLinkedList(struct node* conductor, char* buffer)
   {
     removeNewLine(&token);
     conductor->line = strdup(token);
+    token = strtok(0, CMD_DELIM);
+    if (token == NULL)
+    {
+      break;
+    }
     if ((conductor->next = malloc(sizeof(struct node))) == NULL)
     {
       write(STDERR_FILENO, error_message, strlen(error_message));
       exit(1);
     }
     conductor = conductor->next;
-    token = strtok(0, CMD_DELIM);
   }
   conductor->next = NULL;
 }

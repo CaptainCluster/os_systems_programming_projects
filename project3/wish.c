@@ -23,18 +23,18 @@
 
 int main(int argc, char** argv) 
 {
-  char* buffer;
-  char* token;
+  char* buffer = NULL;
   size_t bufferSize = 0;
   FILE* inputFile;
   char fileContentBuffer[BUFFER_SIZE];
   struct node *root;
   struct node *conductor;
 
-  // A linked list for storing the defined paths
+  // Initializing a linked list for storing the defined paths
   struct node *pathRoot;
+  struct node *pathConductor;
   initializeRoot(&pathRoot);
-  pathRoot->line = "/bin/";
+  pathRoot->line = strdup("/bin/");
 
   //Checking whether the user has given an input file as a command-line arg
   switch(argc)
@@ -51,13 +51,6 @@ int main(int argc, char** argv)
   {
     // Initializing the linked list and conductor (current node)
     initializeRoot(&root);
-    conductor = root;
-    if (conductor == 0)
-    {
-      write(STDERR_FILENO, error_message, strlen(error_message));
-      exit(1);
-    }
-
     printPrompt(argc);
 
     // Fetching the next line and ensuring it is not EOF.
@@ -65,23 +58,24 @@ int main(int argc, char** argv)
     checkEOF(inputFile);
 
     // Putting the separate commands into linked list
-    putTokensInLinkedList(conductor, buffer);
+    putTokensInLinkedList(root, buffer);
 
     // Traversing through the linked list in order to execute 
     // the commands in differing child processes.
     conductor = root;
-    struct node* pathConductor = pathRoot;
-
-    while ( conductor->next != NULL ) 
+    while (conductor != NULL) 
     {
       // Handling each command individually
-      handleCommand(conductor->line, pathConductor);
+      handleCommand(conductor->line, pathRoot);
       conductor = conductor->next;
     }
+
+    // Freeing up the linked list so that new commands can be inserted
+    freeLinkedList(&root);
+    freeLinkedList(&conductor);
   }
-  // Freeing up the linked list and closing the input file
-  freeLinkedList(&root);
-  freeLinkedList(&conductor);
+
+  free(buffer);
   freeLinkedList(&pathRoot);
   fclose(inputFile);
 }
