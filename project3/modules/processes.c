@@ -94,6 +94,8 @@ void handleCommand(char* commandInput, struct node* pathRoot)
   // Getting the arguments together
   appendArguments(&token, &arguments, 0);
 
+  free(token);
+
   // Creating a thread for the command 
   int status;
   switch(fork())

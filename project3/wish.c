@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 {
   char* buffer;
   char* token;
-  size_t bufferSize = BUFFER_SIZE;
+  size_t bufferSize = 0;
   FILE* inputFile;
   char fileContentBuffer[BUFFER_SIZE];
   struct node *root;
@@ -58,7 +58,6 @@ int main(int argc, char** argv)
       exit(1);
     }
 
-    buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
     printPrompt(argc);
 
     // Fetching the next line and ensuring it is not EOF.
@@ -73,7 +72,7 @@ int main(int argc, char** argv)
     conductor = root;
     struct node* pathConductor = pathRoot;
 
-    while ( conductor->next->next != 0 ) 
+    while ( conductor->next != NULL ) 
     {
       // Handling each command individually
       handleCommand(conductor->line, pathConductor);
@@ -82,6 +81,7 @@ int main(int argc, char** argv)
   }
   // Freeing up the linked list and closing the input file
   freeLinkedList(&root);
+  freeLinkedList(&conductor);
   freeLinkedList(&pathRoot);
   fclose(inputFile);
 }
