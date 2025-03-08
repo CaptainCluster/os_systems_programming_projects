@@ -28,7 +28,6 @@ void openRedirect(char* (*arguments)[2048])
   {
     if (!strstr((*arguments)[j], ">"))
     {
-      printf("oo");
       continue;
     }
     if ((fd = fopen((*arguments)[j+1], "w")) == NULL)

@@ -34,7 +34,7 @@ int main(int argc, char** argv)
   struct node *pathRoot;
   struct node *pathConductor;
   initializeRoot(&pathRoot);
-  pathRoot->line = strdup("/bin/");
+  pathRoot->line = "/bin/";
 
   //Checking whether the user has given an input file as a command-line arg
   switch(argc)
