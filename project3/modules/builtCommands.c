@@ -26,14 +26,16 @@ void commandCd(char* const* arguments)
   }
 }
 
-void commandPath(char* const* arguments, struct node* pathConductor)
+void commandPath(char* const* arguments, struct node** pathRoot)
 {
-  int i;
+  freeLinkedList(pathRoot);
+  initializeRoot(pathRoot);
 
+  struct node* pathConductor = *pathRoot;
   pathConductor->line = strdup(arguments[1]);
   pathConductor->next = NULL;
 
-  for (i = 2 ; arguments[i] != NULL ; i++)
+  for (int i = 2 ; arguments[i] != NULL ; i++)
   {
     if ((pathConductor->next = malloc(sizeof(struct node))) == NULL)
     {
@@ -48,6 +50,7 @@ void commandPath(char* const* arguments, struct node* pathConductor)
       char* string = strdup(arguments[i]);
       removeNewLine(&string);
       pathConductor->line = strdup(string);
+      free(string);
       pathConductor->next = NULL;
       continue;
     }

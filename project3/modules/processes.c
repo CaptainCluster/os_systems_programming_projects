@@ -1,5 +1,5 @@
 #include <stdio.h>
-void buildInCommands(char* const* arguments, struct node* pathRoot)
+void buildInCommands(char* const* arguments, struct node** pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
   {
@@ -38,16 +38,30 @@ void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
  */
 char* checkBinDir(char* command, struct node* conductor) 
 {
+  char* path;
+  
   while (conductor != NULL)
   {
-    char *path = strdup(conductor->line);
+    // Allocating memory based on the given command and a path entry in the linked list
+    if((path = (char*) malloc(strlen(command) + strlen(conductor->line) + 1)) == NULL)
+    {
+      write(STDERR_FILENO, error_message, strlen(error_message));
+      exit(1);
+    }
+    strcpy(path, conductor->line);
     strcat(path, command);
+
+    // Ensuring the path file can be accessed
     if (access(path, X_OK) != -1)
     {
-      return strdup(path);
+      return path;
     }
+
+    // Can't access? Freeing up allocated memory and traversing the list.
+    free(path);
     conductor = conductor->next;
   }
+  // The error that triggers if no accessible, and adequate, path is found
   write(STDERR_FILENO, error_message, strlen(error_message));
   exit(1);
 }
@@ -68,12 +82,11 @@ int inspectBuiltInCommand(char* commandInput)
 /**
  * The core function for handling each of the input commands
  */
-void handleCommand(char* commandInput, struct node* pathRoot)
+void handleCommand(char* commandInput, struct node** pathRoot)
 {
-  struct node* pathConductor = pathRoot;
-  
+  struct node* pathConductor = *pathRoot;
+
   // Preserving the command in its original form for comparisons
-  char* originalCommand = strdup(commandInput);
   char *token = strtok(commandInput, ARGS_DELIM);
 
   // Removing newline, provided no arguments were given
@@ -84,17 +97,30 @@ void handleCommand(char* commandInput, struct node* pathRoot)
   {
     token = strtok(0 , ARGS_DELIM);
     appendArguments(&token, &arguments, 1);
-    buildInCommands(arguments, pathConductor);
+    buildInCommands(arguments, pathRoot);
     return;
   }
 
+  // Fetching the command in the following format: <path>/<command>
+  // For instance: /bin/ls
   char *command = checkBinDir(token, pathConductor);
   token = strtok(0 , ARGS_DELIM);
-  
+
   // Getting the arguments together
   appendArguments(&token, &arguments, 0);
 
-  // Creating a thread for the command 
+  /**
+   * The shell command will run in a child process.
+   * 
+   * Child process
+   * =============
+   * 1) Checks whether the output has to be redirected into a file
+   * 2) Executes the command, with its arguments in mind
+   *
+   * Parent process
+   * ==============
+   * Frees the memory allocation for the command variable.
+   */
   int status;
   switch(fork())
   {
@@ -112,6 +138,7 @@ void handleCommand(char* commandInput, struct node* pathRoot)
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
       }
+      free(command);
       break;
   }
 }
