@@ -1,4 +1,9 @@
 #include <stdio.h>
+
+/**
+ * This function only executes if the user has given a command that is 
+ * deemed "built-in."  
+ */ 
 void buildInCommands(char* const* arguments, struct node** pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
@@ -15,7 +20,10 @@ void buildInCommands(char* const* arguments, struct node** pathRoot)
   }
 }
 
-void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
+/**
+ *
+ */ 
+void appendArguments(char **token, char* (*arguments)[2048])
 {
   int i = 1;
   while (*token != NULL)
@@ -96,7 +104,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   if (inspectBuiltInCommand(token))
   {
     token = strtok(0 , ARGS_DELIM);
-    appendArguments(&token, &arguments, 1);
+    appendArguments(&token, &arguments);
     buildInCommands(arguments, pathRoot);
     return;
   }
@@ -107,7 +115,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   token = strtok(0 , ARGS_DELIM);
 
   // Getting the arguments together
-  appendArguments(&token, &arguments, 0);
+  appendArguments(&token, &arguments);
 
   /**
    * The shell command will run in a child process.
