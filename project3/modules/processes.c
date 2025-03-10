@@ -1,5 +1,5 @@
 #include <stdio.h>
-void buildInCommands(char* const* arguments, struct node* pathRoot)
+void buildInCommands(char* const* arguments, struct node** pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
   {
@@ -82,9 +82,9 @@ int inspectBuiltInCommand(char* commandInput)
 /**
  * The core function for handling each of the input commands
  */
-void handleCommand(char* commandInput, struct node* pathRoot)
+void handleCommand(char* commandInput, struct node** pathRoot)
 {
-  struct node* pathConductor = pathRoot;
+  struct node* pathConductor = *pathRoot;
 
   // Preserving the command in its original form for comparisons
   char *token = strtok(commandInput, ARGS_DELIM);
@@ -97,7 +97,7 @@ void handleCommand(char* commandInput, struct node* pathRoot)
   {
     token = strtok(0 , ARGS_DELIM);
     appendArguments(&token, &arguments, 1);
-    buildInCommands(arguments, pathConductor);
+    buildInCommands(arguments, pathRoot);
     return;
   }
 

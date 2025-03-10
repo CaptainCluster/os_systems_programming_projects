@@ -34,7 +34,7 @@ int main(int argc, char** argv)
   struct node *pathRoot;
   struct node *pathConductor;
   initializeRoot(&pathRoot);
-  pathRoot->line = "/bin/";
+  pathRoot->line = strdup("/bin/");
 
   //Checking whether the user has given an input file as a command-line arg
   switch(argc)
@@ -65,18 +65,15 @@ int main(int argc, char** argv)
     conductor = root;
     while (conductor != NULL) 
     {
-      // Handling each command individually
-      handleCommand(conductor->line, pathRoot);
+      handleCommand(conductor->line, &pathRoot);
       conductor = conductor->next;
     }
 
     // Freeing up the linked list so that new commands can be inserted
     freeLinkedList(&root);
-    freeLinkedList(&conductor);
   }
-
   free(buffer);
   freeLinkedList(&pathRoot);
+  freeLinkedList(&pathConductor);
   fclose(inputFile);
 }
-

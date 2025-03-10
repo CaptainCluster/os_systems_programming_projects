@@ -8,13 +8,13 @@ struct node {
 
 void freeLinkedList(struct node** root)
 {
-  struct node* current;
+  struct node* conductor;
   while (*root != NULL)
   {
-    current = *root;
+    conductor = *root;
     *root = (*root)->next;
-    free(current->line);
-    free(current);
+    free(conductor->line);
+    free(conductor);
   }
 }
 
