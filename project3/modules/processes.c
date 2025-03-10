@@ -21,7 +21,8 @@ void buildInCommands(char* const* arguments, struct node** pathRoot)
 }
 
 /**
- *
+ * Puts tokens, each representing an argument, into a list of 
+ * arguments.
  */ 
 void appendArguments(char **token, char* (*arguments)[2048])
 {

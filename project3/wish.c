@@ -72,6 +72,8 @@ int main(int argc, char** argv)
     // Freeing up the linked list so that new commands can be inserted
     freeLinkedList(&root);
   }
+
+  // Freeing up allocated memory that is not prone to double-free error.
   free(buffer);
   freeLinkedList(&pathRoot);
   freeLinkedList(&pathConductor);

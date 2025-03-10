@@ -1,7 +1,8 @@
 /**
  * This file contains the linked list data structure
  */ 
-struct node {
+struct node 
+{
   char* line;
   struct node *next;
 };

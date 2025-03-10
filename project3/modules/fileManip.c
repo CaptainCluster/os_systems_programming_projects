@@ -20,16 +20,24 @@ void checkEOF(FILE* inputFile)
   }
 }
 
+/**
+ * Allows content to be redirected into a file. 
+ */
 void openRedirect(char* (*arguments)[2048])
 {
   FILE* fd;
-  int j;
-  for (j = 0 ; (*arguments)[j] != NULL ; j++)
+
+  // Traversing until '>' is found. If it is not in the arguments array, no 
+  // code in the loop executes.
+  for (int j = 0 ; (*arguments)[j] != NULL ; j++)
   {
+    // Moving to next argument if redirect symbol is not found
     if (!strstr((*arguments)[j], ">"))
     {
       continue;
     }
+
+    // The redirect symbol has been found.
     if ((fd = fopen((*arguments)[j+1], "w")) == NULL)
     {
       exit(1);
