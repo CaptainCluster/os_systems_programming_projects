@@ -10,6 +10,9 @@ void printPrompt(int argc)
   }
 }
 
+/**
+ * Removes a new line from a string
+ */
 void removeNewLine(char** string)
 {
   if ((*string)[strlen(*string)-1] == '\n')

@@ -5,7 +5,7 @@ void commandExit(char* const* arguments)
 {
   if (arguments[1] != NULL)
   {
-    write(STDERR_FILENO, error_message, strlen(error_message));
+    write(STDERR_FILENO, ERR_EXITARGS, strlen(ERR_EXITARGS));
     exit(1);
   }
   exit(0);
@@ -16,12 +16,13 @@ void commandCd(char* const* arguments)
   // Exiting with error if this is not met: 0 < args < 2
   if (arguments[1] == NULL || arguments[2] != NULL)
   {
-    write(STDERR_FILENO, error_message, strlen(error_message));
+    write(STDERR_FILENO, ERR_CDARGNUM, strlen(ERR_CDARGNUM));
     exit(1);
   }
+  // Changing the directory and inspecting the results. Calling an error if it fails.
   if (chdir(arguments[1]) != 0)
   {
-    write(STDERR_FILENO, error_message, strlen(error_message));
+    write(STDERR_FILENO, ERR_CDFAIL, strlen(ERR_CDFAIL));
     exit(1);
   }
 }
@@ -39,7 +40,7 @@ void commandPath(char* const* arguments, struct node** pathRoot)
   {
     if ((pathConductor->next = malloc(sizeof(struct node))) == NULL)
     {
-      write(STDERR_FILENO, error_message, strlen(error_message));
+      write(STDERR_FILENO, ERR_MALLOC, strlen(ERR_MALLOC));
       exit(1);
     }  
     pathConductor = pathConductor->next;

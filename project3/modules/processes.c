@@ -54,7 +54,7 @@ char* checkBinDir(char* command, struct node* conductor)
     // Allocating memory based on the given command and a path entry in the linked list
     if((path = (char*) malloc(strlen(command) + strlen(conductor->line) + 1)) == NULL)
     {
-      write(STDERR_FILENO, error_message, strlen(error_message));
+      write(STDERR_FILENO, ERR_MALLOC, strlen(ERR_MALLOC));
       exit(1);
     }
     strcpy(path, conductor->line);
@@ -71,7 +71,7 @@ char* checkBinDir(char* command, struct node* conductor)
     conductor = conductor->next;
   }
   // The error that triggers if no accessible, and adequate, path is found
-  write(STDERR_FILENO, error_message, strlen(error_message));
+  write(STDERR_FILENO, ERR_NO_PATH, strlen(ERR_NO_PATH));
   exit(1);
 }
 
@@ -102,6 +102,8 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   char *arguments[2048] = {};
   arguments[0] = token;
 
+  // This code executes if the command is built-in. After executing the code inside
+  // the clause, the function returns
   if (inspectBuiltInCommand(token))
   {
     token = strtok(0 , ARGS_DELIM);
@@ -134,7 +136,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   switch(fork())
   {
     case -1:
-      write(STDERR_FILENO, error_message, strlen(error_message));
+      write(STDERR_FILENO, ERR_PROCESS, strlen(ERR_PROCESS));
       exit(1);
       break;
     case 0:
@@ -144,7 +146,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
     default:
       if (wait(&status) == -1)
       {
-        write(STDERR_FILENO, error_message, strlen(error_message));
+        write(STDERR_FILENO, ERR_PROCESS, strlen(ERR_PROCESS));
         exit(1);
       }
       free(command);
