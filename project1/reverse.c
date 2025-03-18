@@ -16,6 +16,8 @@
 #include "modules/filemanip.c"
 #include "modules/linkedlist.c"
 
+
+// Various constants
 #define ERR_INPUTFILE  "Error when attempting to open the input file!\n"
 #define ERR_OUTPUTFILE "Error when attempting to open the output file!\n"
 #define ERR_MALLOC     "malloc failed.\n"
@@ -109,12 +111,15 @@ int main(int argc, char** argv)
     conductor = conductor->next;
   }
   
+  // Freeing buffer to avoid memory leaks and reversing linked list
   conductor->next = NULL;
   free(buffer);
   root = reverseLinkedList(root);
 
+  // Traversing the list in order to write to the output file
   traverseListOutput(root, outputFile);
 
+  // Freeing up everything and closing the program
   freeLinkedList(&root);
   free(conductor);
   fclose(inputFile);

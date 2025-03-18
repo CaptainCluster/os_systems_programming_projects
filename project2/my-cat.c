@@ -5,7 +5,8 @@
 #define BUFFER_SIZE    1024
 
 /**
- * Reading the contents of the file. 
+ * Reading the contents of the file. Has a buffer ready to read content
+ * until EOF is met. The content in the buffer is written in a loop.
  */ 
 void readContent(FILE* fp)
 {

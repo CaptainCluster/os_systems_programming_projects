@@ -4,6 +4,11 @@
 
 #define BUFFER_SIZE    1024
 
+/**
+ * Reading the content of the file by putting it in a buffer. 
+ * Then the content of the buffer is compared to the grep 
+ * search term. If there is a match, the buffer is printed.
+ */
 void readContent(FILE* fp, char* grepTerm)
 {
   char buffer[BUFFER_SIZE];
@@ -20,6 +25,24 @@ void readContent(FILE* fp, char* grepTerm)
 int main(int argc, char** argv)
 {
   int i;
+
+  /**
+   * A switch-case that handles things based on how many args 
+   * have been given
+   *
+   * Scenarios
+   * =========
+   * No arguments - The prorgram prints a line, explaining how
+   * things should be handled and then exits.
+   *
+   * 1 argument - Search term is received and lines received 
+   * from standard input are being compared to.
+   *
+   * Default (2<= number of argument) - Search term is received
+   * and all other arguments are assumed to be file names. The 
+   * program attempts to open the files. If it fails, the program
+   * exits.
+   */
   switch(argc)
   {
     case 1:
