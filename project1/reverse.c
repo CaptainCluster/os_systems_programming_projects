@@ -54,12 +54,14 @@ int main(int argc, char** argv)
       break;
 
     case 3:
+      // Ensuring the input and output files are different
       if (!checkInputOutputValidity(argv[1], argv[2]))
       {
         fprintf(stderr, "%s", ERR_SAMEFILE);
         exit(1);
       }
-
+      
+      // Attempting to open the files
       if ((inputFile = openFile(argv[1], "r", ERR_INPUTFILE)) == NULL)
       {
         fprintf(stderr, "error: cannot open file '%s'", argv[1]);

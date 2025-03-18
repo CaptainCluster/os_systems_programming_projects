@@ -5,20 +5,27 @@
 #define BUFFER_SIZE    1024
 
 /**
- * Reading the content of the file by putting it in a buffer. 
+ * Reading the content of the file by each line in a buffer. 
  * Then the content of the buffer is compared to the grep 
  * search term. If there is a match, the buffer is printed.
  */
 void readContent(FILE* fp, char* grepTerm)
 {
-  char buffer[BUFFER_SIZE];
-  
-  while (fgets(buffer, sizeof(buffer), fp) != NULL)
+  size_t bufferSize = 0;
+  char* buffer;
+
+  while (1)
   {
+    if (getline(&buffer, &bufferSize, fp) <= 0)
+    {
+      break;
+    }
     if (strstr(buffer, grepTerm) != NULL)
     {
       printf("%s", buffer);
     }
+    free(buffer);
+    buffer = NULL;
   }
 }
 
