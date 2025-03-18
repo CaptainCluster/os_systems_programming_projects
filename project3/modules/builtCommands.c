@@ -31,6 +31,11 @@ void commandPath(char* const* arguments, struct node** pathRoot)
 {
   freeLinkedList(pathRoot);
   initializeRoot(pathRoot);
+  
+  if (arguments[1] == NULL)
+  {
+    return;
+  }
 
   struct node* pathConductor = *pathRoot;
   pathConductor->line = strdup(arguments[1]);
