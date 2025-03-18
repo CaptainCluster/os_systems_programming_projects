@@ -43,13 +43,14 @@ int main(int argc, char** argv)
       inputFile = stdin;
       break;
     default:
-      inputFile = openFile(argv[1], "r", ERR_INPUTFILE);
+      // Using a custom-made file opening function
+      inputFile = openFile(argv[1], "r"); 
       break;
   }
 
   while (1) 
   {
-    // Initializing the linked list and conductor (current node)
+    // (re-)initializing the linked list and conductor (current node)
     initializeRoot(&root);
     printPrompt(argc);
 
@@ -72,6 +73,8 @@ int main(int argc, char** argv)
     // Freeing up the linked list so that new commands can be inserted
     freeLinkedList(&root);
   }
+
+  // Freeing up allocated memory that is not prone to double-free error.
   free(buffer);
   freeLinkedList(&pathRoot);
   freeLinkedList(&pathConductor);

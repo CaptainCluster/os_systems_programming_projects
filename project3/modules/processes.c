@@ -1,4 +1,9 @@
 #include <stdio.h>
+
+/**
+ * This function only executes if the user has given a command that is 
+ * deemed "built-in."  
+ */ 
 void buildInCommands(char* const* arguments, struct node** pathRoot)
 {
   if (strstr(arguments[0], "exit")) 
@@ -15,7 +20,11 @@ void buildInCommands(char* const* arguments, struct node** pathRoot)
   }
 }
 
-void appendArguments(char **token, char* (*arguments)[2048], int isBuiltIn)
+/**
+ * Puts tokens, each representing an argument, into a list of 
+ * arguments.
+ */ 
+void appendArguments(char **token, char* (*arguments)[2048])
 {
   int i = 1;
   while (*token != NULL)
@@ -45,7 +54,7 @@ char* checkBinDir(char* command, struct node* conductor)
     // Allocating memory based on the given command and a path entry in the linked list
     if((path = (char*) malloc(strlen(command) + strlen(conductor->line) + 1)) == NULL)
     {
-      write(STDERR_FILENO, error_message, strlen(error_message));
+      write(STDERR_FILENO, ERR_MALLOC, strlen(ERR_MALLOC));
       exit(1);
     }
     strcpy(path, conductor->line);
@@ -62,7 +71,7 @@ char* checkBinDir(char* command, struct node* conductor)
     conductor = conductor->next;
   }
   // The error that triggers if no accessible, and adequate, path is found
-  write(STDERR_FILENO, error_message, strlen(error_message));
+  write(STDERR_FILENO, ERR_NO_PATH, strlen(ERR_NO_PATH));
   exit(1);
 }
 
@@ -93,10 +102,12 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   char *arguments[2048] = {};
   arguments[0] = token;
 
+  // This code executes if the command is built-in. After executing the code inside
+  // the clause, the function returns
   if (inspectBuiltInCommand(token))
   {
     token = strtok(0 , ARGS_DELIM);
-    appendArguments(&token, &arguments, 1);
+    appendArguments(&token, &arguments);
     buildInCommands(arguments, pathRoot);
     return;
   }
@@ -107,7 +118,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   token = strtok(0 , ARGS_DELIM);
 
   // Getting the arguments together
-  appendArguments(&token, &arguments, 0);
+  appendArguments(&token, &arguments);
 
   /**
    * The shell command will run in a child process.
@@ -125,7 +136,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
   switch(fork())
   {
     case -1:
-      write(STDERR_FILENO, error_message, strlen(error_message));
+      write(STDERR_FILENO, ERR_PROCESS, strlen(ERR_PROCESS));
       exit(1);
       break;
     case 0:
@@ -135,7 +146,7 @@ void handleCommand(char* commandInput, struct node** pathRoot)
     default:
       if (wait(&status) == -1)
       {
-        write(STDERR_FILENO, error_message, strlen(error_message));
+        write(STDERR_FILENO, ERR_PROCESS, strlen(ERR_PROCESS));
         exit(1);
       }
       free(command);
