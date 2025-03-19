@@ -8,6 +8,7 @@
  * More info about access - https://www.geeksforgeeks.org/access-command-in-linux-with-examples/
  * Chdir - https://www.geeksforgeeks.org/chdir-in-c-language-with-examples/
  * Redirect - https://stackoverflow.com/questions/14543443/in-c-how-do-you-redirect-stdin-stdout-stderr-to-files-when-making-an-execvp-or
+ * Adding '/' to the end of path - https://www.geeksforgeeks.org/strcat-in-c/
  */  
 #include <stdio.h>
 #include <stdlib.h>

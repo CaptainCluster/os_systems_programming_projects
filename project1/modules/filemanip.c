@@ -19,7 +19,7 @@ FILE* openFile(char* fileName, char* openMethod, char* errorMessage)
 
 /**
  * Checking whether the given I/O files match. Returning an int 
- * value dependent on the state of affairs.
+ * value that explains whether the files were the same or not.
  */ 
 int checkInputOutputValidity(char* inputFileName, char* outputFileName)
 {

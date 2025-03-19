@@ -48,7 +48,12 @@ void appendArguments(char **token, char* (*arguments)[2048])
 char* checkBinDir(char* command, struct node* conductor) 
 {
   char* path;
-  
+  if (conductor->line == NULL)
+  {
+    write(STDERR_FILENO, ERR_NO_PATH, strlen(ERR_NO_PATH));
+    exit(1);
+  }
+
   while (conductor != NULL)
   {
     // Allocating memory based on the given command and a path entry in the linked list

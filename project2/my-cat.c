@@ -5,7 +5,8 @@
 #define BUFFER_SIZE    1024
 
 /**
- * Reading the contents of the file. 
+ * Reading the contents of the file. Has a buffer ready to read content
+ * until EOF is met. The content in the buffer is written in a loop.
  */ 
 void readContent(FILE* fp)
 {
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
     // Should opening the file fail, it will be closed
     if (fp == NULL)
     {
-      printf("Cannot open file.\n");
+      printf("my-cat: cannot open file.\n");
       exit(1);
     }
 

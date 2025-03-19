@@ -31,9 +31,22 @@ void commandPath(char* const* arguments, struct node** pathRoot)
 {
   freeLinkedList(pathRoot);
   initializeRoot(pathRoot);
+  
+  if (arguments[1] == NULL)
+  {
+    return;
+  }
+  char initialArg[strlen(arguments[1])+1];
+  strcpy(initialArg, arguments[1]);
+  
+  // Adding a '/' char to the end if the given dir lacks one
+  if (initialArg[strlen(initialArg)-1] != '/')
+  {
+    strcat(initialArg, "/");
+  }
 
   struct node* pathConductor = *pathRoot;
-  pathConductor->line = strdup(arguments[1]);
+  pathConductor->line = strdup(initialArg);
   pathConductor->next = NULL;
 
   for (int i = 2 ; arguments[i] != NULL ; i++)
@@ -50,7 +63,17 @@ void commandPath(char* const* arguments, struct node** pathRoot)
     {
       char* string = strdup(arguments[i]);
       removeNewLine(&string);
-      pathConductor->line = strdup(string);
+      
+      // Initializing a new arg for a potential '/' char
+      char arg[strlen(string)+1];
+      strcpy(arg, string);
+      
+      // Adding a '/' char to the end if the given dir lacks one
+      if (string[strlen(string)-1] != '/')
+      {
+        strcat(arg, "/");
+      }
+      pathConductor->line = strdup(arg);
       free(string);
       pathConductor->next = NULL;
       continue;
