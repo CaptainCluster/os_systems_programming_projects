@@ -16,9 +16,13 @@ Project 1:
 
 Project 2:
 
-> gcc -o mycat my-cat.c
+> gcc -o my-cat my-cat.c
 
-> gcc -o mygrep my-grep.c
+> gcc -o my-grep my-grep.c
+
+> gcc -o my-zip my-zip.c
+
+> gcc -o my-unzip my-unzip.c 
 
 Project 3:
 
