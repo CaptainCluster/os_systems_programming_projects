@@ -1,3 +1,7 @@
+/*
+ * How to find lines with a substring - https://stackoverflow.com/questions/12784766/check-substring-exists-in-a-string-in-c
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
